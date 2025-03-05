@@ -22,13 +22,16 @@ func main() {
 	JWT_SECRET := os.Getenv("JWT_SECRET")
 	utils.Assert(JWT_SECRET != "", "could not read JWT_SECRET from .env file, please check that it exist")
 
+	ADMIN_EMAIL := os.Getenv("ADMIN_EMAIL")
+	utils.Assert(ADMIN_EMAIL != "", "could not read ADMIN_EMAIL from .env file, please check that it exist")
+
 	db, err := sql.Open("postgres", DB_URL)
 	utils.ErrorAssert(err, "error connecting to database")
 
 	quries := database.New(db)
 
 	fanarStorage := storage.NewStorage(db, quries)
-	fanarServer := fanar.NewFanarServer(":4000", JWT_SECRET, fanarStorage)
+	fanarServer := fanar.NewFanarServer(":4000", JWT_SECRET, ADMIN_EMAIL, fanarStorage)
 
 	err = fanarServer.Start()
 	if err != nil {
