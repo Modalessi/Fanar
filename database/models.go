@@ -10,6 +10,22 @@ import (
 	"github.com/google/uuid"
 )
 
+type Course struct {
+	ID           uuid.UUID
+	Title        string
+	Description  string
+	CourseCode   string
+	CreditHours  int32
+	ContactHours int32
+	CreatedAt    sql.NullTime
+	UpdatedAt    sql.NullTime
+}
+
+type CoursesPreRequisite struct {
+	CourseID       uuid.UUID
+	PreRequisiteID uuid.UUID
+}
+
 type User struct {
 	ID        uuid.UUID
 	Name      string

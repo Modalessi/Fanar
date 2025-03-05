@@ -34,6 +34,27 @@ what is a course :
 - with tags of course (tags are powerfull)
 
 
+## Data Strcture
+
+- Course
+  - id: uuid
+  - title: string
+  - course_page: md file
+  - course-code: string
+  - credit hours: int
+  - contact-hours: int 
+
+- Prerequest
+  - course: uuid (refrence Course.id)
+  - prerequest: uuid (refrence Course.id)
+  
+- Resroueses
+  - id: uuid
+  - title: string
+  - description: string (optional)
+  - url: string
+  - tags: []string
+
 
 ## TODO
 Auth
