@@ -6,23 +6,28 @@ import (
 )
 
 type FanarServer struct {
-	Addr    string
-	Server  *http.ServeMux
-	Storage Storage
+	Addr      string
+	JWTSecret string
+	Server    *http.ServeMux
+	Storage   Storage
 }
 
-func NewFanarServer(addr string, storage Storage) *FanarServer {
+func NewFanarServer(addr string, jwtSecret string, storage Storage) *FanarServer {
 	server := &http.ServeMux{}
 
 	fs := &FanarServer{
-		Addr:    addr,
-		Server:  server,
-		Storage: storage,
+		Addr:      addr,
+		JWTSecret: jwtSecret,
+		Server:    server,
+		Storage:   storage,
 	}
 
 	server.HandleFunc("GET /check", withServer(fs, checkHealth))
 
 	server.HandleFunc("POST /register", withServer(fs, register))
+	server.HandleFunc("POST /login", withServer(fs, login))
+
+	server.HandleFunc("GET /protected", withServer(fs, authorized(protected, fs.JWTSecret)))
 
 	return fs
 }

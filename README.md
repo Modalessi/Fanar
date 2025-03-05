@@ -38,5 +38,5 @@ what is a course :
 ## TODO
 Auth
 - register [DONE]
-- login 
+- login [DONE]
 - admin middlewre
