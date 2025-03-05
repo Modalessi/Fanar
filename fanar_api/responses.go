@@ -8,7 +8,14 @@ type FanarResponse struct {
 	Response Jsonable `json:"response"`
 }
 
-func successResponse(code int, msg string) *FanarResponse {
+func newFanarResponse(code int, res Jsonable) *FanarResponse {
+	return &FanarResponse{
+		Code:     code,
+		Response: res,
+	}
+}
+
+func fanarMessageResponse(code int, msg string) *FanarResponse {
 	res := struct {
 		Jsonable `json:"-"`
 		Code     int    `json:"code"`
@@ -24,22 +31,22 @@ func successResponse(code int, msg string) *FanarResponse {
 	}
 }
 
-// func errorResponse(code int, err error) *FanarResponse {
+func errorResponse(code int, err error) *FanarResponse {
 
-// 	res := struct {
-// 		Jsonable `json:"-"`
-// 		Code     int    `json:"code"`
-// 		Message  string `json:"message"`
-// 	}{
-// 		Code:    code,
-// 		Message: err.Error(),
-// 	}
+	res := struct {
+		Jsonable `json:"-"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+	}{
+		Code:    code,
+		Message: err.Error(),
+	}
 
-// 	return &FanarResponse{
-// 		Code:     code,
-// 		Response: res,
-// 	}
-// }
+	return &FanarResponse{
+		Code:     code,
+		Response: res,
+	}
+}
 
 func serverErrorResponse(msg string) *FanarResponse {
 	res := struct {

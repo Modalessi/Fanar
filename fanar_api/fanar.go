@@ -6,19 +6,23 @@ import (
 )
 
 type FanarServer struct {
-	Addr   string
-	Server *http.ServeMux
+	Addr    string
+	Server  *http.ServeMux
+	Storage Storage
 }
 
-func NewFanarServer(addr string) *FanarServer {
+func NewFanarServer(addr string, storage Storage) *FanarServer {
 	server := &http.ServeMux{}
 
 	fs := &FanarServer{
-		Addr:   addr,
-		Server: server,
+		Addr:    addr,
+		Server:  server,
+		Storage: storage,
 	}
 
 	server.HandleFunc("GET /check", withServer(fs, checkHealth))
+
+	server.HandleFunc("POST /register", withServer(fs, register))
 
 	return fs
 }

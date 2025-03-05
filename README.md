@@ -36,4 +36,7 @@ what is a course :
 
 
 ## TODO
-- basic stuff
+Auth
+- register [DONE]
+- login 
+- admin middlewre
