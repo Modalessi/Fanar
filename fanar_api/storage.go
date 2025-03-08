@@ -16,4 +16,5 @@ type Storage interface {
 	GetCourseByID(ctx context.Context, id string) (*models.Course, error)
 	StoreCourse(ctx context.Context, course *models.Course) error
 	DeleteCourse(ctx context.Context, id string) (*models.Course, error)
+	UpdateCourse(ctx context.Context, course *models.Course) (*models.Course, error)
 }

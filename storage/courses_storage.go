@@ -77,3 +77,31 @@ func (s *Storage) DeleteCourse(ctx context.Context, id string) (*models.Course, 
 		ContactHours: int(deletedCourse.ContactHours),
 	}, nil
 }
+
+func (s *Storage) UpdateCourse(ctx context.Context, course *models.Course) (*models.Course, error) {
+	// Create update params for the course
+	updateCourseParams := database.UpdateCourseParams{
+		ID:           *course.ID,
+		Title:        course.Title,
+		CourseCode:   course.Code,
+		Description:  course.Description,
+		CreditHours:  int32(course.CreditHours),
+		ContactHours: int32(course.ContactHours),
+	}
+
+	// Update course in database
+	updatedCourse, err := s.queries.UpdateCourse(ctx, updateCourseParams)
+	if err != nil {
+		return nil, fmt.Errorf("db error: updating course: %v", err)
+	}
+
+	// Convert database model to application model
+	return &models.Course{
+		ID:           &updatedCourse.ID,
+		Title:        updatedCourse.Title,
+		Description:  updatedCourse.Description,
+		Code:         updatedCourse.CourseCode,
+		CreditHours:  int(updatedCourse.CreditHours),
+		ContactHours: int(updatedCourse.ContactHours),
+	}, nil
+}

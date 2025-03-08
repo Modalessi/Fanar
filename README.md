@@ -67,4 +67,3 @@ Auth
 - Delete Course (admin) [DONE]
 - Edit Course (admin) [DONE]
 - Get Course [DONE]
-- 

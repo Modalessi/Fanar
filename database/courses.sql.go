@@ -85,6 +85,51 @@ func (q *Queries) GetCourseByID(ctx context.Context, id uuid.UUID) (Course, erro
 	return i, err
 }
 
+const updateCourse = `-- name: UpdateCourse :one
+UPDATE courses 
+SET 
+  title = $1, 
+  course_code = $2, 
+  description = $3, 
+  credit_hours = $4, 
+  contact_hours = $5, 
+  updated_at = now()
+WHERE id = $6 
+RETURNING id, title, description, course_code, credit_hours, contact_hours, created_at, updated_at
+`
+
+type UpdateCourseParams struct {
+	Title        string
+	CourseCode   string
+	Description  string
+	CreditHours  int32
+	ContactHours int32
+	ID           uuid.UUID
+}
+
+func (q *Queries) UpdateCourse(ctx context.Context, arg UpdateCourseParams) (Course, error) {
+	row := q.db.QueryRowContext(ctx, updateCourse,
+		arg.Title,
+		arg.CourseCode,
+		arg.Description,
+		arg.CreditHours,
+		arg.ContactHours,
+		arg.ID,
+	)
+	var i Course
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Description,
+		&i.CourseCode,
+		&i.CreditHours,
+		&i.ContactHours,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const updateCourseDescription = `-- name: UpdateCourseDescription :one
 UPDATE courses SET description = $1 WHERE id = $2 RETURNING id, title, description, course_code, credit_hours, contact_hours, created_at, updated_at
 `
