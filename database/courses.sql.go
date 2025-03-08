@@ -45,6 +45,26 @@ func (q *Queries) CreateCourse(ctx context.Context, arg CreateCourseParams) (Cou
 	return i, err
 }
 
+const deleteCourseByID = `-- name: DeleteCourseByID :one
+DELETE FROM courses WHERE id = $1 RETURNING id, title, description, course_code, credit_hours, contact_hours, created_at, updated_at
+`
+
+func (q *Queries) DeleteCourseByID(ctx context.Context, id uuid.UUID) (Course, error) {
+	row := q.db.QueryRowContext(ctx, deleteCourseByID, id)
+	var i Course
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Description,
+		&i.CourseCode,
+		&i.CreditHours,
+		&i.ContactHours,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getCourseByID = `-- name: GetCourseByID :one
 SELECT id, title, description, course_code, credit_hours, contact_hours, created_at, updated_at FROM courses WHERE id = $1
 `

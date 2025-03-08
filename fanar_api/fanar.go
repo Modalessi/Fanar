@@ -30,6 +30,8 @@ func NewFanarServer(addr string, jwtSecret string, adminEmail string, storage St
 	server.HandleFunc("POST /login", withServer(fs, login))
 
 	server.HandleFunc("POST /course", withServer(fs, authorized(adminOnly(createCourse, adminEmail), jwtSecret)))
+	server.HandleFunc("DELETE /course", withServer(fs, authorized(adminOnly(deleteCourse, adminEmail), jwtSecret)))
+	server.HandleFunc("GET /course", withServer(fs, getCourse))
 
 	server.HandleFunc("GET /protected", withServer(fs, authorized(protected, fs.JWTSecret)))
 

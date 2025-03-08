@@ -9,11 +9,11 @@ import (
 )
 
 type createCourseRequest struct {
-	Title        string `json:"title"`
-	CourseCode   string `json:"course_code"`
-	Description  string `json:"description"`
-	CreditHours  int    `json:"credit_hours"`
-	ContactHours int    `json:"contact_hours"`
+	Title        string `json:"title" validate:"required"`
+	CourseCode   string `json:"course_code" validate:"required"`
+	Description  string `json:"description" validate:"required"`
+	CreditHours  int    `json:"credit_hours" validate:"required"`
+	ContactHours int    `json:"contact_hours" validate:"required"`
 }
 
 type createCourseResponse struct {

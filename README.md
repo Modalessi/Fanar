@@ -61,3 +61,10 @@ Auth
 - register [DONE]
 - login [DONE]
 - admin middlewre [DONE]
+
+- Course
+- Create Course (admin) [DONE]
+- Delete Course (admin) [DONE]
+- Edit Course (admin) [DONE]
+- Get Course [DONE]
+- 

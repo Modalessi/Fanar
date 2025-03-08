@@ -6,3 +6,6 @@ SELECT * FROM courses WHERE id = $1;
 
 -- name: UpdateCourseDescription :one
 UPDATE courses SET description = $1 WHERE id = $2 RETURNING *;
+
+-- name: DeleteCourseByID :one
+DELETE FROM courses WHERE id = $1 RETURNING *;
