@@ -2,6 +2,7 @@ package fanar
 
 import (
 	"context"
+	"io"
 
 	"github.com/Modalessi/iau_resources/models"
 )
@@ -9,7 +10,7 @@ import (
 type Storage interface {
 	// users
 	DoesUserExistWithEmail(ctx context.Context, email string) (bool, error)
-	GetUserByEmail(ctc context.Context, id string) (*models.User, error)
+	GetUserByEmail(ctc context.Context, email string) (*models.User, error)
 	StoreUser(ctx context.Context, user *models.User) error
 
 	// courses
@@ -17,4 +18,7 @@ type Storage interface {
 	StoreCourse(ctx context.Context, course *models.Course) error
 	DeleteCourse(ctx context.Context, id string) (*models.Course, error)
 	UpdateCourse(ctx context.Context, course *models.Course) (*models.Course, error)
+
+	// resources
+	StoreResource(ctx context.Context, resource *models.Resource, file io.Reader, contentType string) error
 }

@@ -48,12 +48,14 @@ what is a course :
   - course: uuid (refrence Course.id)
   - prerequest: uuid (refrence Course.id)
   
-- Resroueses
+- Resrouese
   - id: uuid
+  - course_id: uuid (refrence course.id)
   - title: string
   - description: string (optional)
-  - url: string
+  - url: string (the actual file)
   - tags: []string
+    - tags are hardcoded (Notes, Homeworks, Quizes, Labs, Slides, Midterms, Finals, Exams, OldExams)
 
 
 ## TODO
@@ -61,9 +63,21 @@ Auth
 - register [DONE]
 - login [DONE]
 - admin middlewre [DONE]
+- restore passwords
+- confirm email
+
 
 - Course
 - Create Course (admin) [DONE]
 - Delete Course (admin) [DONE]
 - Edit Course (admin) [DONE]
 - Get Course [DONE]
+
+
+
+- Resource
+- create resource (upload) [DONE]
+- delete resource (deleteing) 
+  - admin can delete any file
+  - user can delete only the files he uploaded
+  

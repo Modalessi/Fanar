@@ -26,6 +26,19 @@ type CoursesPreRequisite struct {
 	PreRequisiteID uuid.UUID
 }
 
+type Resource struct {
+	ID          uuid.UUID
+	CourseID    uuid.UUID
+	Title       string
+	Description string
+	FileExt     string
+	S3Url       string
+	Tags        []string
+	CreatedBy   uuid.UUID
+	CreatedAt   sql.NullTime
+	UpdatedAt   sql.NullTime
+}
+
 type User struct {
 	ID        uuid.UUID
 	Name      string
