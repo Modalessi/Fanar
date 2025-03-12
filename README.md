@@ -1,4 +1,4 @@
-# IAU RESOURCES
+# Fanar
 where you find everything you need
 
 
@@ -76,6 +76,7 @@ Auth
 
 
 - Resource
+- download resource [DONEs]
 - create resource (upload) [DONE]
 - delete resource (deleteing) 
   - admin can delete any file

@@ -2,14 +2,18 @@ package storage
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"io"
 	"net/url"
+	"time"
 
 	"github.com/Modalessi/iau_resources/database"
 	"github.com/Modalessi/iau_resources/models"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/google/uuid"
 )
 
 func (s *Storage) StoreResource(ctx context.Context, resource *models.Resource, file io.Reader, contentType string) error {
@@ -77,6 +81,52 @@ func (s *Storage) uploadFile(ctx context.Context, courseId, fileName, ext string
 	}
 
 	return nil
+}
+
+func (s *Storage) GetResource(ctx context.Context, id string) (*models.Resource, error) {
+	resourceUUID, err := uuid.Parse(id)
+	if err != nil {
+		return nil, fmt.Errorf("db error: invalid resource id")
+	}
+
+	resourceDB, err := s.queries.GetResourceByID(ctx, resourceUUID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("db error: getting resource from database")
+	}
+
+	resourceURL, err := url.Parse(resourceDB.S3Url)
+	if err != nil {
+		return nil, fmt.Errorf("somethign deeply is wrong here, s3 url in not a valid url: %v", err)
+	}
+
+	return &models.Resource{
+		ID:          &resourceDB.ID,
+		CourseID:    resourceDB.CourseID,
+		Title:       resourceDB.Title,
+		Description: resourceDB.Description,
+		FileExt:     resourceDB.FileExt,
+		Url:         resourceURL,
+		Tags:        resourceDB.Tags,
+		Created_by:  resourceDB.CreatedBy,
+	}, nil
+}
+
+func (s *Storage) GetResourceDownloadURL(ctx context.Context, resource *models.Resource) (string, error) {
+
+	presignClient := s3.NewPresignClient(s.s3.Client)
+	downloadReq, err := presignClient.PresignGetObject(ctx, &s3.GetObjectInput{
+		Bucket:                     aws.String(s.s3.bucket),
+		Key:                        aws.String(s.fileS3Key(resource.CourseID.String(), resource.Title, resource.FileExt)),
+		ResponseContentDisposition: aws.String(fmt.Sprintf("%s%s", resource.Title, resource.FileExt)),
+	}, s3.WithPresignExpires(15*time.Minute))
+	if err != nil {
+		return "", fmt.Errorf("s3 error: error generating download link %v", err)
+	}
+
+	return downloadReq.URL, nil
 }
 
 func (s *Storage) fileS3Key(courseId, fileName, ext string) string {

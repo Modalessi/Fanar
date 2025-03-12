@@ -73,3 +73,25 @@ func (q *Queries) DeleteResourceByID(ctx context.Context, id uuid.UUID) (Resourc
 	)
 	return i, err
 }
+
+const getResourceByID = `-- name: GetResourceByID :one
+SELECT id, course_id, title, description, file_ext, s3_url, tags, created_by, created_at, updated_at FROM resources WHERE id = $1
+`
+
+func (q *Queries) GetResourceByID(ctx context.Context, id uuid.UUID) (Resource, error) {
+	row := q.db.QueryRowContext(ctx, getResourceByID, id)
+	var i Resource
+	err := row.Scan(
+		&i.ID,
+		&i.CourseID,
+		&i.Title,
+		&i.Description,
+		&i.FileExt,
+		&i.S3Url,
+		pq.Array(&i.Tags),
+		&i.CreatedBy,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}

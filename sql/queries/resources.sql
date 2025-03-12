@@ -3,3 +3,6 @@ INSERT INTO resources (course_id, title, description, file_ext, s3_url, tags, cr
 
 -- name: DeleteResourceByID :one
 DELETE FROM resources WHERE id = $1 RETURNING *;
+
+-- name: GetResourceByID :one
+SELECT * FROM resources WHERE id = $1;
