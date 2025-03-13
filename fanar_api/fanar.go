@@ -24,20 +24,25 @@ func NewFanarServer(addr string, jwtSecret string, adminEmail string, storage St
 		Storage:    storage,
 	}
 
-	server.HandleFunc("GET /check", withServer(fs, checkHealth))
+	// middlwares
+	fanarHandler := NewFanarHandler(fs)
+	adminOnly := NewAdminOnlyMiddlware(adminEmail)
+	authorized := NewAuthorizedMiddleware(jwtSecret)
 
-	server.HandleFunc("POST /register", withServer(fs, register))
-	server.HandleFunc("POST /login", withServer(fs, login))
+	server.HandleFunc("GET /check", fanarHandler(checkHealth))
 
-	server.HandleFunc("POST /course", withServer(fs, authorized(adminOnly(createCourse, adminEmail), jwtSecret)))
-	server.HandleFunc("DELETE /course", withServer(fs, authorized(adminOnly(deleteCourse, adminEmail), jwtSecret)))
-	server.HandleFunc("PUT /course", withServer(fs, authorized(adminOnly(editCourse, adminEmail), jwtSecret)))
-	server.HandleFunc("GET /course", withServer(fs, getCourse))
+	server.HandleFunc("POST /register", fanarHandler(register))
+	server.HandleFunc("POST /login", fanarHandler(login))
 
-	server.HandleFunc("POST /resource", withServer(fs, authorized(addResource, jwtSecret)))
-	server.HandleFunc("GET /resource/link", withServer(fs, getResourceLink))
+	server.HandleFunc("POST /course", fanarHandler(authorized(adminOnly(createCourse))))
+	server.HandleFunc("DELETE /course", fanarHandler(authorized(adminOnly(deleteCourse))))
+	server.HandleFunc("PUT /course", fanarHandler(authorized(adminOnly(editCourse))))
+	server.HandleFunc("GET /course", fanarHandler(getCourse))
 
-	server.HandleFunc("GET /protected", withServer(fs, authorized(protected, fs.JWTSecret)))
+	server.HandleFunc("POST /resource", fanarHandler(authorized(addResource)))
+	server.HandleFunc("GET /resource/link", fanarHandler(getResourceLink))
+
+	server.HandleFunc("GET /protected", fanarHandler(authorized(protected)))
 
 	return fs
 }
