@@ -41,6 +41,7 @@ func NewFanarServer(addr string, jwtSecret string, adminEmail string, storage St
 
 	server.HandleFunc("POST /resource", fanarHandler(authorized(addResource)))
 	server.HandleFunc("GET /resource/link", fanarHandler(getResourceLink))
+	server.HandleFunc("GET /resource", fanarHandler(getCourseResources))
 
 	server.HandleFunc("GET /protected", fanarHandler(authorized(protected)))
 

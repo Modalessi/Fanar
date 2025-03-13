@@ -76,7 +76,8 @@ Auth
 
 
 - Resource
-- download resource [DONEs]
+- download resource [DONE]
+- get course resources [DONE]
 - create resource (upload) [DONE]
 - delete resource (deleteing) 
   - admin can delete any file

@@ -22,5 +22,6 @@ type Storage interface {
 	// resources
 	StoreResource(ctx context.Context, resource *models.Resource, file io.Reader, contentType string) error
 	GetResource(ctx context.Context, id string) (*models.Resource, error)
+	GetCourseResources(ctx context.Context, courseID string) ([]*models.Resource, error)
 	GetResourceDownloadURL(ctx context.Context, resource *models.Resource) (string, error)
 }

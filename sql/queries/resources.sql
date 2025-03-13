@@ -6,3 +6,6 @@ DELETE FROM resources WHERE id = $1 RETURNING *;
 
 -- name: GetResourceByID :one
 SELECT * FROM resources WHERE id = $1;
+
+-- name: GetCourseResources :many
+SELECT * FROM resources WHERE course_id = $1;

@@ -114,6 +114,34 @@ func (s *Storage) GetResource(ctx context.Context, id string) (*models.Resource,
 	}, nil
 }
 
+func (s *Storage) GetCourseResources(ctx context.Context, courseID string) ([]*models.Resource, error) {
+	courseUUID, err := uuid.Parse(courseID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid course url: %v", err)
+	}
+
+	resourcesDB, err := s.queries.GetCourseResources(ctx, courseUUID)
+	if err != nil {
+		return nil, fmt.Errorf("db error: getting resources from db: %v", err)
+	}
+
+	resources := make([]*models.Resource, len(resourcesDB))
+	for i, r := range resourcesDB {
+		resources[i] = &models.Resource{
+			ID:          &r.ID,
+			CourseID:    courseUUID,
+			Title:       r.Title,
+			Description: r.Description,
+			FileExt:     r.FileExt,
+			Url:         &url.URL{Path: r.S3Url},
+			Tags:        r.Tags,
+			Created_by:  r.CreatedBy,
+		}
+	}
+
+	return resources, nil
+}
+
 func (s *Storage) GetResourceDownloadURL(ctx context.Context, resource *models.Resource) (string, error) {
 
 	presignClient := s3.NewPresignClient(s.s3.Client)
