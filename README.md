@@ -1,61 +1,19 @@
 # Fanar
-where you find everything you need
+where you find everything you need as an iau student
 
 
 
 the idea of the website :
-a website where iau students can find everything they need
+a website where iau students can find everything they need, and contribute 
 
 like what ?
 - major plans, and their details
 - courses, and their details
 - resources for each course
-- calender
+- calender and events
 - doctors evaluations (in the future)
 
-
-what is a plan :
-a set of years
-each year is a set of terms
-each term is a set of courses
-
-
-what is a course :
-- it has a title
-- description
-- credit hours
-- course-code
-- contact hours
-- pre-requiues
-
-
-- what is resours
-- it is a file, linked to a course
-- with tags of course (tags are powerfull)
-
-
-## Data Strcture
-
-- Course
-  - id: uuid
-  - title: string
-  - course_page: md file
-  - course-code: string
-  - credit hours: int
-  - contact-hours: int 
-
-- Prerequest
-  - course: uuid (refrence Course.id)
-  - prerequest: uuid (refrence Course.id)
-  
-- Resrouese
-  - id: uuid
-  - course_id: uuid (refrence course.id)
-  - title: string
-  - description: string (optional)
-  - url: string (the actual file)
-  - tags: []string
-    - tags are hardcoded (Notes, Homeworks, Quizes, Labs, Slides, Midterms, Finals, Exams, OldExams)
+the idea for the website is to be like wikipedia, an information hub, and with an open source model.
 
 
 ## TODO
@@ -74,12 +32,11 @@ Auth
 - Get Course [DONE]
 
 
-
 - Resource
 - download resource [DONE]
 - get course resources [DONE]
 - create resource (upload) [DONE]
-- delete resource (deleteing) 
+- delete resource (deleteing) [DONE]
   - admin can delete any file
   - user can delete only the files he uploaded
   
